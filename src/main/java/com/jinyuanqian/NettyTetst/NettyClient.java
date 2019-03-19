@@ -24,15 +24,20 @@ public class NettyClient {
      */
     private String host;
 
-    public NettyClient(int port, String host) throws InterruptedException {
+    public NettyClient(){
+
+    }
+
+
+    public NettyClient(int port, String host) {
         this.port = port;
         this.host = host;
         start();
     }
-    private void start() throws InterruptedException {
+    private void start()  {
 
         EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
-
+        System.out.println("启动服务开始");
         try {
 
             Bootstrap bootstrap = new Bootstrap();
@@ -43,17 +48,21 @@ public class NettyClient {
             bootstrap.option(ChannelOption.SO_KEEPALIVE,true);
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
-                protected void initChannel(SocketChannel socketChannel)
-                        throws Exception {
+                protected void initChannel(SocketChannel socketChannel) {
                     socketChannel.pipeline().addLast(new NettyClientHandler());
                 }
             });
             ChannelFuture channelFuture = bootstrap.connect(host, port).sync();
             if (channelFuture.isSuccess()) {
                 System.err.println("连接服务器成功");
+            }else{
+                System.err.println("连接服务器失败");
             }
             channelFuture.channel().closeFuture().sync();
-        } finally {
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
             eventLoopGroup.shutdownGracefully();
         }
     }

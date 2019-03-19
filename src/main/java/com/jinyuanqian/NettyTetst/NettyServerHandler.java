@@ -25,8 +25,10 @@ public class NettyServerHandler extends ChannelHandlerAdapter  {
         }
     }
 
-    /*
-     * 从ByteBuf中获取信息 使用UTF-8编码返回
+    /**
+     *
+     * @param buf
+     * @return
      */
     private String getMessage(ByteBuf buf) {
 
@@ -35,7 +37,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter  {
         try {
             return new String(con, "UTF8");
         } catch (UnsupportedEncodingException e) {
-           // e.printStackTrace();
             return null;
         }
     }

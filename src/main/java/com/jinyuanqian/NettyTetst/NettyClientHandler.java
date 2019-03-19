@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 public class NettyClientHandler  extends ChannelHandlerAdapter {
     private ByteBuf firstMessage;
 
-/*    private ImConnection imConnection = new ImConnection();*/
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -46,7 +45,13 @@ public class NettyClientHandler  extends ChannelHandlerAdapter {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         System.err.println("掉线了...");
         final EventLoop eventLoop = ctx.channel().eventLoop();
-     //   eventLoop.schedule(new Runnable(() -> ), TimeUnit.DAYS);
+        eventLoop.schedule(new Runnable() {
+            @Override
+            public void run() {
+                new NettyClient(10086, "localhost");
+            }
+        }, 1L, TimeUnit.SECONDS);
         super.channelInactive(ctx);
+        Thread.sleep(100000);
     }
 }

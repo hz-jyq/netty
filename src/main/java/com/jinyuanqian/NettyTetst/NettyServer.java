@@ -25,17 +25,20 @@ public class NettyServer {
         ChannelFuture channelFuture = null;
         try {
             channelFuture = bootstrap.bind(port).sync();
+            if (channelFuture.isSuccess()) {
+                System.err.println("启动Netty服务成功，端口号：" + this.port);
+            }
+            channelFuture.channel().closeFuture().sync();
         } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally {
+            //channelFuture.channel().closeFuture().sync();
+        }
 
-        }
-        if (channelFuture.isSuccess()) {
-            System.err.println("启动Netty服务成功，端口号：" + this.port);
-        }
     }
 
     public static void main(String[] args) throws InterruptedException {
         new NettyServer(10086);
-        Thread.sleep(100000);
         System.err.println("Netty服务关闭");
     }
 }
